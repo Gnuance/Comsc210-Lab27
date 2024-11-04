@@ -39,8 +39,8 @@ const int FRIENDSHIP_MIN_VALUE = 0;
 // function dec
 int MainMenu();
 bool IsValidOption(string, int, int);
-bool IsAnyVillagers(map<string, tuple<int, string, string>> &);
-void DisplayVillage(map<string, tuple<int, string, string>> &);
+bool IsAnyVillagers(const map<string, tuple<int, string, string>> &);
+void DisplayVillage(const map<string, tuple<int, string, string>> &);
 void AddVillager(map<string, tuple<int, string, string>> &);
 void DeleteVillager(map<string, tuple<int, string, string>> &);
 void IncreaseFriendship(map<string, tuple<int, string, string>> &);
@@ -176,9 +176,29 @@ bool IsValidOption(string userInput, int minOption, int maxOption)
     return true;
 }
 
-bool IsAnyVillagers(const map<string, tuple<int, string, string>> &village) const
+// tests if village has any villagers
+bool IsAnyVillagers(const map<string, tuple<int, string, string>> &village)
 {
     return village.size() > 0;
+}
+
+// output village to screen
+void DisplayVillage(const map<string, tuple<int, string, string>> &village)
+{
+    if (!IsAnyVillagers(village))
+    {
+        cout << "No villagers in this village." << "\n\n";
+        return;
+    }
+
+    int count = 0;
+    cout << "Village:" << "\n";
+    for (auto it = village.begin(); it != village.end(); it++)
+    {
+        auto [friendshipLevel, species, catchPhrase] = it->second;
+        cout << "\t[" << ++count << "] " << it->first << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << ")" << "\n";
+    }
+    cout << "\n";
 }
 
 // adds random villager to trip
@@ -212,26 +232,44 @@ void AddVillager(map<string, tuple<int, string, string>> &village)
     village.insert({name, make_tuple(friendshipLevel, species, catchPhrase)});
 
     cout << "Added to village: " << name << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << "]" << "\n\n";
+
+    DisplayVillage(village); // output village after completion
 }
 
-void DisplayVillage(const map<string, tuple<int, string, string>> &village) const
+void DeleteVillager(map<string, tuple<int, string, string>> &village)
 {
+    // guard statement in case of empty list
     if (!IsAnyVillagers(village))
     {
-        cout << "No villagers in this village." << "\n\n";
+        cout << "No villagers in this village to delete." << "\n\n";
         return;
     }
 
-    int count = 0;
-    cout << "Village:" << "\n";
-    for (auto it = village.begin(); it != village.end(); it++)
+    string userInput = "";
+    auto it = village.begin(); // iterator to first element
+
+    // display Goats in current trip available for selection
+    // prompt user for index to delete
+    // WARNING: index DISPLAYED TO USER begins at 1
+    do
     {
-        auto [friendshipLevel, species, catchPhrase] = it->second;
-        cout << "\t[" << ++count << "] " << it->first << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << ")" << "\n";
-    }
-    cout << "\n";
+        DisplayVillage(village);
+        cout << "Please enter index to delete --> ";
+        getline(cin, userInput); // get user input as string
+        // make sure user value is valid and delete
+        if (IsValidOption(userInput, 1, village.size()))
+        {
+            advance(it, stoi(userInput) - 1); // -1 because index displayed to users starts at 1
+            cout << "\n"
+                 << "Updated Village After Removing: " << it->first << "\n";
+            village.erase(it);
+            DisplayVillage(village);
+            break;
+        }
+    } while (true);
 }
 
+// increases friendship of all villagers by 1
 void IncreaseFriendship(map<string, tuple<int, string, string>> &village)
 {
     if (!IsAnyVillagers(village))
@@ -249,10 +287,10 @@ void IncreaseFriendship(map<string, tuple<int, string, string>> &village)
             village[it->first] = make_tuple(friendshipLevel + 1, species, catchPhrase);
         }
     }
-
-
+    DisplayVillage(village); // output village after completion
 }
 
+// decreases friendship of all villagers by 1
 void DecreaseFriendship(map<string, tuple<int, string, string>> &village)
 {
     if (!IsAnyVillagers(village))
@@ -270,4 +308,5 @@ void DecreaseFriendship(map<string, tuple<int, string, string>> &village)
             village[it->first] = make_tuple(friendshipLevel - 1, species, catchPhrase);
         }
     }
+    DisplayVillage(village); // output village after completion
 }
