@@ -54,7 +54,7 @@ int main()
     map<string, tuple<int, string, string>> village; // map representing a group of villagers (village)
 
     // prompt user for selection and input
-    // user selection 4 is the program exit code
+    // user selection 6 is the program exit code
     do
     {
         userSelectedOption = MainMenu();
@@ -91,7 +91,7 @@ int MainMenu()
     do
     {
         // output prompt
-        cout << "*** VILLAGE MANAGER 3001 ***" << "\n"
+        cout << "*** VILLAGE MANAGER (Formerly Goat Manager) ***" << "\n"
              << "[1] Add a villager" << "\n"
              << "[2] Delete a villager" << "\n"
              << "[3] Increase friendship" << "\n"
@@ -177,7 +177,6 @@ void AddVillager(map<string, tuple<int, string, string>> &village)
         // output prompt
         cout << "Friendship level: ";
         getline(cin, userInput); // get user input as string and test
-        cout << "\n";
     } while (!IsValidOption(userInput, 0, 10));
     // if isValidOption passed, stoi(userInput) has already been tested and is safe
     friendshipLevel = stoi(userInput);
@@ -285,11 +284,12 @@ if (!IsAnyVillagers(village))
     auto it = village.find(name); // find villager by name
 
     // output results
+    cout << "\n";
     if (it != village.end())
     {
         cout << "Villager: " << name << " found in village!";
     } else {
         cout << "Villager: " << name << " NOT found in village!";
     }
-    cout << endl;
+    cout << "\n" << endl;
 }
