@@ -32,6 +32,10 @@
 #include <algorithm>
 using namespace std;
 
+// variable dec
+const int FRIENDSHIP_MAX_VALUE = 10;
+const int FRIENDSHIP_MIN_VALUE = 0;
+
 // function dec
 int MainMenu();
 bool IsValidOption(string, int, int);
@@ -172,7 +176,7 @@ bool IsValidOption(string userInput, int minOption, int maxOption)
     return true;
 }
 
-bool IsAnyVillagers(map<string, tuple<int, string, string>> &village)
+bool IsAnyVillagers(const map<string, tuple<int, string, string>> &village) const
 {
     return village.size() > 0;
 }
@@ -210,9 +214,9 @@ void AddVillager(map<string, tuple<int, string, string>> &village)
     cout << "Added to village: " << name << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << "]" << "\n\n";
 }
 
-void DisplayVillage(map<string, tuple<int, string, string>> &village)
+void DisplayVillage(const map<string, tuple<int, string, string>> &village) const
 {
-    if (village.size() < 1)
+    if (!IsAnyVillagers(village))
     {
         cout << "No villagers in this village." << "\n\n";
         return;
@@ -228,8 +232,42 @@ void DisplayVillage(map<string, tuple<int, string, string>> &village)
     cout << "\n";
 }
 
-void IncreaseFriendship(map<string, tuple<int, string, string>> &)
+void IncreaseFriendship(map<string, tuple<int, string, string>> &village)
 {
+    if (!IsAnyVillagers(village))
+    {
+        cout << "No villagers in this village to increase friendship." << "\n\n";
+        return;
+    }
+
+    // loop through village increasing friendship by 1 if not == to max value
+    for (auto it = village.begin(); it != village.end(); it++)
+    {
+        auto [friendshipLevel, species, catchPhrase] = it->second;
+        if (friendshipLevel < FRIENDSHIP_MAX_VALUE)
+        {
+            village[it->first] = make_tuple(friendshipLevel + 1, species, catchPhrase);
+        }
+    }
+
+
 }
 
-void DecreaseFriendship(map<string, tuple<int, string, string>> &);
+void DecreaseFriendship(map<string, tuple<int, string, string>> &village)
+{
+    if (!IsAnyVillagers(village))
+    {
+        cout << "No villagers in this village to decrease friendship." << "\n\n";
+        return;
+    }
+
+    // loop through village increasing friendship by 1 if not == to max value
+    for (auto it = village.begin(); it != village.end(); it++)
+    {
+        auto [friendshipLevel, species, catchPhrase] = it->second;
+        if (friendshipLevel > FRIENDSHIP_MIN_VALUE)
+        {
+            village[it->first] = make_tuple(friendshipLevel - 1, species, catchPhrase);
+        }
+    }
+}
