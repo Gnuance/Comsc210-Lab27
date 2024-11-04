@@ -35,6 +35,7 @@ using namespace std;
 // function dec
 int MainMenu();
 bool IsValidOption(string, int, int);
+bool IsAnyVillagers(map<string, tuple<int, string, string>> &);
 void DisplayVillage(map<string, tuple<int, string, string>> &);
 void AddVillager(map<string, tuple<int, string, string>> &);
 void DeleteVillager(map<string, tuple<int, string, string>> &);
@@ -171,6 +172,11 @@ bool IsValidOption(string userInput, int minOption, int maxOption)
     return true;
 }
 
+bool IsAnyVillagers(map<string, tuple<int, string, string>> &village)
+{
+    return village.size() > 0;
+}
+
 // adds random villager to trip
 void AddVillager(map<string, tuple<int, string, string>> &village)
 {
@@ -217,7 +223,13 @@ void DisplayVillage(map<string, tuple<int, string, string>> &village)
     for (auto it = village.begin(); it != village.end(); it++)
     {
         auto [friendshipLevel, species, catchPhrase] = it->second;
-        cout << "\t[" << ++count << "] " << it->first << " [" << it->second.get<0> << ", " << it->get_color() << ")" << "\n";
+        cout << "\t[" << ++count << "] " << it->first << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << ")" << "\n";
     }
     cout << "\n";
 }
+
+void IncreaseFriendship(map<string, tuple<int, string, string>> &)
+{
+}
+
+void DecreaseFriendship(map<string, tuple<int, string, string>> &);
