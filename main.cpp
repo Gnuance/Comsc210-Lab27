@@ -32,22 +32,19 @@
 #include <algorithm>
 using namespace std;
 
-// global variable dec
-tuple<int, string, string> villagerStats;
-
 // function dec
 int MainMenu();
 bool IsValidOption(string, int, int);
-void DisplayVillage(map &);
-void AddVillager(map &);
-void DeleteVillager(map &);
-void IncreaseFriendship(map &);
-void DecreaseFriendship(map &);
+void DisplayVillage(map<string, tuple<int, string, string>> &);
+void AddVillager(map<string, tuple<int, string, string>> &);
+void DeleteVillager(map<string, tuple<int, string, string>> &);
+void IncreaseFriendship(map<string, tuple<int, string, string>> &);
+void DecreaseFriendship(map<string, tuple<int, string, string>> &);
 
 int main()
 {
     // declarations
-    int userSelectedOption = 0;                       // represents user option chosen from menu
+    int userSelectedOption = 0;                      // represents user option chosen from menu
     map<string, tuple<int, string, string>> village; // map representing a group of villagers (village)
 
     // prompt user for selection and input
@@ -174,10 +171,8 @@ bool IsValidOption(string userInput, int minOption, int maxOption)
     return true;
 }
 
-
-
-// adds random goat to trip
-void AddVillager(map<string, tuple<int, string, string>>& village)
+// adds random villager to trip
+void AddVillager(map<string, tuple<int, string, string>> &village)
 {
     string name = "";
     int friendshipLevel = -1;
@@ -207,4 +202,22 @@ void AddVillager(map<string, tuple<int, string, string>>& village)
     village.insert({name, make_tuple(friendshipLevel, species, catchPhrase)});
 
     cout << "Added to village: " << name << " [" << friendshipLevel << ", " << species << ", " << catchPhrase << "]" << "\n\n";
+}
+
+void DisplayVillage(map<string, tuple<int, string, string>> &village)
+{
+    if (village.size() < 1)
+    {
+        cout << "No villagers in this village." << "\n\n";
+        return;
+    }
+
+    int count = 0;
+    cout << "Village:" << "\n";
+    for (auto it = village.begin(); it != village.end(); it++)
+    {
+        auto [friendshipLevel, species, catchPhrase] = it->second;
+        cout << "\t[" << ++count << "] " << it->first << " [" << it->second.get<0> << ", " << it->get_color() << ")" << "\n";
+    }
+    cout << "\n";
 }
