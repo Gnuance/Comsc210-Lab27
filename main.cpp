@@ -45,6 +45,7 @@ void AddVillager(map<string, tuple<int, string, string>> &);
 void DeleteVillager(map<string, tuple<int, string, string>> &);
 void IncreaseFriendship(map<string, tuple<int, string, string>> &);
 void DecreaseFriendship(map<string, tuple<int, string, string>> &);
+void SearchForVillager(const map<string, tuple<int, string, string>> &);
 
 int main()
 {
@@ -66,10 +67,10 @@ int main()
             DeleteVillager(village);
             break;
         case 3:
-            IncreaseFrienship(village);
+            IncreaseFriendship(village);
             break;
         case 4:
-            DecreaseFrienship(village);
+            DecreaseFriendship(village);
             break;
         case 5:
             SearchForVillager(village);
@@ -78,49 +79,6 @@ int main()
             break;
         }
     } while (userSelectedOption != 6);
-
-    // access the map using a range-based for loop
-    // cout << "Villagers and their favorite colors (range-based for loop):" << endl;
-    // for (auto pair : villagerColors) {
-    //     cout << pair.first << ": ";
-    //     for (auto color : pair.second)
-    //         cout << color << " ";
-    //     cout << endl;
-    // }
-
-    // access the map using iterators
-    // cout << "\nVillagers and their favorite colors (iterators):" << endl;
-    // for (map<string, vector<string>>::iterator it = villagerColors.begin();
-    //                                            it != villagerColors.end(); ++it) {
-    //     cout << it->first << ": ";
-    //     for (auto color : it->second) {
-    //         cout << color << " ";
-    //     }
-    //     cout << endl;
-    // }
-
-    // delete an element
-    villagerColors.erase("Raymond");
-
-    // search for an element using .find() to avoid errors
-    string searchKey = "Audie";
-    auto it = villagerColors.find(searchKey);
-    if (it != villagerColors.end())
-    { // the iterator points to beyond the end of the map
-      // if searchKey is not found
-        cout << "\nFound " << searchKey << "'s favorite colors: ";
-        for (auto color : it->second) // range loop to traverse the value/vector
-            cout << color << " ";
-        cout << endl;
-    }
-    else
-        cout << endl
-             << searchKey << " not found." << endl;
-
-    // report size, clear, report size again to confirm map operations
-    cout << "\nSize before clear: " << villagerColors.size() << endl;
-    villagerColors.clear();
-    cout << "Size after clear: " << villagerColors.size() << endl;
 
     return 0;
 }
@@ -309,4 +267,29 @@ void DecreaseFriendship(map<string, tuple<int, string, string>> &village)
         }
     }
     DisplayVillage(village); // output village after completion
+}
+
+// searches for villager by name
+void SearchForVillager(const map<string, tuple<int, string, string>> &village){
+if (!IsAnyVillagers(village))
+    {
+        cout << "No villagers in this village." << "\n\n";
+        return;
+    }
+
+    string name = "";
+
+    cout << "Please enter villager name: ";
+    getline(cin, name);
+
+    auto it = village.find(name); // find villager by name
+
+    // output results
+    if (it != village.end())
+    {
+        cout << "Villager: " << name << " found in village!";
+    } else {
+        cout << "Villager: " << name << " NOT found in village!";
+    }
+    cout << endl;
 }
